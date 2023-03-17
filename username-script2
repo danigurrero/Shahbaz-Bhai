@@ -1,0 +1,18 @@
+echo -n "Enter username: "
+read username
+
+
+if [[ $username =~ [^a-zA-Z] ]]; then
+  echo "Error: username cannot contain special characters or numbers"
+  exit 1
+fi
+
+
+echo -n "Enter password: "
+read -s password
+
+
+if [[ $password =~ [^a-zA-Z] ]]; then
+  echo "Error: password cannot contain special characters or numbers"
+  exit 1
+fi

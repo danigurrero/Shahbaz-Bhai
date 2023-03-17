@@ -1,0 +1,51 @@
+#!/bin/bash
+
+while true; do
+	echo "First Name?"
+	read b
+
+	if [[ $b =~ [^a-zA-Z] ]] || [[ -z $b ]]; then
+  		echo "Error: username cannot contain special characters or numbers"
+	else
+		echo "Input is valid"
+		break
+	fi 
+done
+echo
+
+while true; do
+	echo "Second Name?"
+	read c
+	if [[ $c =~ [^a-zA-Z] ]] || [[ -z $c ]]; then
+                echo "Error: username cannot contain special characters or numbers"
+        else
+                echo "Input is valid"
+                break
+        fi
+done
+echo
+
+
+a="Hello"
+title="$a $b $c"
+title_size=${#title}
+COLUMNS=$(tput cols)
+ROWS=$(tput lines)
+final=$((($title_size + $COLUMNS) / 2))
+final_2=$((($title_size + $ROWS) / 2))
+
+#ROW_WISE
+
+echo "FORMATTING COLUMN WISE"
+echo
+printf "\033[96m%${COLUMNS}s\033[0m" " " | tr " " "*"
+printf "\033[31m%${final}s\033[0m\n" "$title"
+printf "\033[96m%${COLUMNS}s\033[0m" " " | tr " " "*"
+echo
+
+echo "FORMATTING ROW WISE"
+echo
+printf "\033[96m%${COLUMNS}s\033[0m" " " | tr " " "*"
+printf "\033[31m%${final_2}s\033[0m\n" "$title"
+printf "\033[96m%${COLUMNS}s\033[0m" " " | tr " " "*"
+echo

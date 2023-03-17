@@ -1,0 +1,31 @@
+i# Define the function
+greet() {
+    # Prompt the user for their first and last name
+    while true; do
+        echo "First Name?"
+        read first_name
+        echo
+
+        echo "Last Name?"
+        read last_name
+        echo
+
+        # Validate the input
+        if [[ $first_name =~ [^a-zA-Z] ]] || [[ -z $first_name ]] || [[ $last_name =~ [^a-zA-Z] ]] || [[ -z $last_name ]]; then
+            echo "Error: First and last names cannot contain special characters or numbers, and cannot be empty"
+        else
+            echo "Input is valid"
+            break
+        fi
+    done
+
+    echo
+    echo
+    # Display a greeting message using the entered first and last names
+    echo "Hello $first_name $last_name"
+}
+
+
+# Call the function
+greet
+

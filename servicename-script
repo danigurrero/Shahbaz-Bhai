@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Check if any service names were provided
+if [ $# -eq 0 ]; then
+    echo "Error: Please provide one or more service names"
+    exit 1
+fi
+
+# Loop through the service names
+for service in "$@"; do
+    # Get the process IDs for the service
+    pids=$(ps -ef | grep "$service" | awk '{print $2}')
+
+    # Check if any process IDs were found
+    if [ -z "$pids" ]; then
+        echo "No process IDs found for service $service"
+    else
+        echo "Process IDs for service $service: $pids"
+    fi
+
+    # Check if the service is listening on a port
+    port=$(netstat -tulpn | grep "$service" | awk '{print $4}' | cut -d ':' -f 2)
+
+    # Check if a port was found
+    if [ -z "$port" ]; then
+        echo "Service $service is not listening on a port"
+    else
+        echo "Service $service is listening on port $port"
+    fi
+done
+

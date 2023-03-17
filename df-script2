@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Get the main storage device
+main_storage=$(df -h | grep -v "Filesystem" | sort -n -r -k 5 | head -n 1 | awk '{print $1}')
+
+# Get the size of the main storage device
+size=$(df -h | grep "$main_storage" | awk '{print $2}')
+
+# Get the available and used space for the main storage device
+available=$(df -h | grep "$main_storage" | awk '{print $4}')
+used=$(df -h | grep "$main_storage" | awk '{print $3}')
+
+# Display the main storage device, size, available space, and used space
+echo "Main storage device: $main_storage"
+echo "Size: $size"
+echo "Available space: $available"
+echo "Used space: $used"
+
