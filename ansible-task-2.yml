@@ -1,0 +1,54 @@
+- name: Launch instances
+  hosts: localhost
+  gather_facts: true
+  vars:
+    key_name: ansible-task
+    instance_type: t2.micro
+    image_id: ami-00874d747dde814fa
+    region: us-east-1
+    count: 1
+    security_group: ansible-taskk
+    instance_names:
+      - EC2_Instance_1
+      - EC2_Instance_2
+      
+  tasks:
+  - name: Create VPC
+    ec2_vpc_net:
+      name: my_vpc
+      cidr_block: 10.0.0.0/16
+      region: "{{ region }}"
+      aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+      aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    register: vpc
+    
+  - name: Create subnet
+    ec2_vpc_subnet:
+      vpc_id: "{{ vpc.vpc.id }}"
+      cidr: 10.0.1.0/24
+      region: "{{ region }}"
+      aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+      aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      map_public: yes
+      resource_tags:
+        Name: Ansible_Subnet
+    register: subnet
+    
+  - name: Launch instances
+    ec2:
+      key_name: "{{ key_name }}"
+      instance_type: "{{ instance_type }}"
+      image: "{{ image_id }}"
+      region: "{{ region }}"
+      count: "{{ count }}"
+      group: "{{ security_group }}"
+      wait: true
+      vpc_subnet_id: "{{ subnet.subnet.id }}"
+      assign_public_ip: yes
+      aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+      aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+      instance_tags:
+        Name: "{{ item }}"
+    with_items: "{{ instance_names }}"
+    register: ec2
+
